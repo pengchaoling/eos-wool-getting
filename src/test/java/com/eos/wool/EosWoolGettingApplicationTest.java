@@ -1,13 +1,16 @@
 package com.eos.wool;
 
 import io.bigbearbro.eos4j.Eos4j;
+import io.bigbearbro.eos4j.ExcelOperate;
 import io.bigbearbro.eos4j.api.result.PushTransactionResults;
+import io.bigbearbro.eos4j.entity.EosAccount;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -30,6 +33,39 @@ public class EosWoolGettingApplicationTest {
 		System.out.println("test");
 	}
 
+    /**
+     * 创建excel模板
+     */
+    @Test
+    public void createExcel(){
+        ExcelOperate excelOperate = new ExcelOperate();
+        List<EosAccount> eosAccounts = excelOperate.getStudent();
+        // 创建Excel表格
+        excelOperate.createExcel(eosAccounts, "F:/eosAccount.xls");
+    }
 
+    /**
+     * 导入excel 并进行转账
+     */
+    @Test
+    public void readExcelAndTransfer(){
+        ExcelOperate excelOperate = new ExcelOperate();
+        List<EosAccount> eosAccounts = excelOperate.readExcel("F:/eosAccount.xls");
+        for (EosAccount  eosAccount : eosAccounts){
+            Eos4j eos4j = new Eos4j("https://api.jeda.one");
+
+            PushTransactionResults transactionResults = null;
+            try {
+                transactionResults = eos4j.transfer(eosAccount.getPk(),
+                        "eosio.token",eosAccount.getFromAccount(),
+                        eosAccount.getToAccount(),
+                        "0.0001 EOS", "1;97;pengchaoling;");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println(transactionResults.toString());
+        }
+        System.out.println("执行完毕");
+    }
 
 }
