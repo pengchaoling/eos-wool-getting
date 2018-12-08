@@ -166,7 +166,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>com.chudian.block.ChudianBlockEosApplication</mainClass>
+							<mainClass>com.eos.wool.EosWoolGettingApplication</mainClass>
 						</manifest>
 						<manifestEntries>
 							<Class-Path>conf/</Class-Path>
