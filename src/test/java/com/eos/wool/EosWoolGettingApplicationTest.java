@@ -151,7 +151,7 @@ public class EosWoolGettingApplicationTest {
 
                 BigDecimal bigDecimal = eos4j.getCurrencyBalance(eosAccount.getFromAccount(),code,symbol);
                 String amount = bigDecimal.toString();
-                if(amount.equals("")){
+                if(amount.equals("0.0000")){
                     System.out.println("账号余额已经清零"+eosAccount.getFromAccount());
                     continue;
                 }
