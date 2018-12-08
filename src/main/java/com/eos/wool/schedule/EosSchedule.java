@@ -24,7 +24,7 @@ public class EosSchedule {
     private ExecutorService executors = Executors.newFixedThreadPool(100);
 
 
-    @Scheduled(fixedRate = 1000)
+    //@Scheduled(fixedRate = 1000)
     public void heroBet(){
         LOG.info("start to eosTransferSch");
             executors.execute(new Runnable() {

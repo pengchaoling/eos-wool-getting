@@ -66,9 +66,6 @@ public class ExcelOperate {
         headCell.setCellValue("自己的账户");
         headCell.setCellStyle(cellStyle);
 
-        headCell = hssfRow.createCell(2);
-        headCell.setCellValue("目标账户");
-        headCell.setCellStyle(cellStyle);
 
         // 添加数据内容
         for (int i = 0; i < list.size(); i++) {
@@ -82,10 +79,6 @@ public class ExcelOperate {
 
             cell = hssfRow.createCell(1);
             cell.setCellValue(eosAccount.getFromAccount());
-            cell.setCellStyle(cellStyle);
-
-            cell = hssfRow.createCell(2);
-            cell.setCellValue(eosAccount.getToAccount());
             cell.setCellStyle(cellStyle);
         }
 
@@ -146,11 +139,6 @@ public class ExcelOperate {
                 }
                 eosAccount.setFromAccount(cell.getStringCellValue());
 
-                cell = hssfRow.getCell(2);
-                if (cell == null) {
-                    continue;
-                }
-                eosAccount.setToAccount(cell.getStringCellValue());
 
                 list.add(eosAccount);
             }

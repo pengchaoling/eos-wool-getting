@@ -14,10 +14,7 @@ public class EosAccount {
      */
     private String fromAccount;
 
-    /**
-     *目标账户
-     */
-    private String toAccount;
+
 
     public String getPk() {
         return pk;
@@ -35,18 +32,11 @@ public class EosAccount {
         this.fromAccount = fromAccount;
     }
 
-    public String getToAccount() {
-        return toAccount;
-    }
 
-    public void setToAccount(String toAccount) {
-        this.toAccount = toAccount;
-    }
 
     public EosAccount(String pk, String fromAccount, String toAccount) {
         this.pk = pk;
         this.fromAccount = fromAccount;
-        this.toAccount = toAccount;
     }
 
     public EosAccount() {
@@ -57,7 +47,6 @@ public class EosAccount {
         return "EosAccount{" +
                 "pk='" + pk + '\'' +
                 ", fromAccount='" + fromAccount + '\'' +
-                ", toAccount='" + toAccount + '\'' +
                 '}';
     }
 }
