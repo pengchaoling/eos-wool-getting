@@ -1,10 +1,15 @@
 package com.eos.wool;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.eos.wool.service.EosService;
+import com.eos.wool.utils.common.HttpHelper;
 import io.bigbearbro.eos4j.Eos4j;
 import io.bigbearbro.eos4j.ExcelOperate;
 import io.bigbearbro.eos4j.api.result.PushTransactionResults;
 import io.bigbearbro.eos4j.entity.EosAccount;
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -188,31 +193,51 @@ public class EosWoolGettingApplicationTest {
     }
 
     /**
-     * 用主账户创建新账户
+     * 用主账户批量创建新账户,每次十个,记得修改下面的参数
      */
     @Test
     public void CreateAccount(){
-        Eos4j eos4j = new Eos4j("https://node.betdice.one");
 
-        try {
-            eos4j.createAccount(mainAccountPk,mainAccountname,
-                    "smartcapit11","EOS6AHzhi6QSJQKhrrLcssyekCkDfaeTQ4SvfxRviRf3xKBYQVCct","EOS6AHzhi6QSJQKhrrLcssyekCkDfaeTQ4SvfxRviRf3xKBYQVCct",
+        String lastAccunt = "";
 
-                    4096l,"0.1 EOS","0.05 EOS",1l);
-        } catch (IOException e) {
-            e.printStackTrace();
+        String url = "https://eospark.com/api/contract/eosio.token/trx?page=1&size=10&action=transfer";
+
+        String res = HttpHelper.sendGet(url, "utf-8");
+        JSONObject jsonObject = JSON.parseObject(res);
+        JSONArray data = jsonObject.getJSONObject("data").getJSONArray("actions");
+
+        for(Object item : data){
+            item = (JSONObject) item;
+            JSONObject transdata = ((JSONObject) item).getJSONObject("data");
+            String eosaccount = transdata.getString("from");
+            if(lastAccunt.equals(eosaccount)){
+                continue;
+            }
+
+            lastAccunt = eosaccount;
+
+            eosaccount = eosaccount.substring(0,eosaccount.length()-2);
+
+            if(eosaccount.equals("crazycapit")||eosaccount.equals("eoscrashma")){
+                continue;
+            }
+
+            eosaccount = eosaccount+ RandomStringUtils.randomAlphanumeric(2).toLowerCase();
+
+            System.out.println(eosaccount);
+
+            Eos4j eos4j = new Eos4j("https://node.betdice.one");
+            try {
+                eos4j.createAccount(mainAccountPk,mainAccountname,
+                        eosaccount,"EOS6AHzhi6QSJQKhrrLcssyekCkDfaeTQ4SvfxRviRf3xKBYQVCct","EOS6AHzhi6QSJQKhrrLcssyekCkDfaeTQ4SvfxRviRf3xKBYQVCct",
+
+                        4096l,"0.1 EOS","0.05 EOS",1l);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
-
     }
-
-
-
-
-
-
-
-
 
 
 }
