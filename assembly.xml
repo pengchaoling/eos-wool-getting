@@ -7,28 +7,28 @@
     <fileSets>
         <fileSet>
             <directory>${project.build.directory}</directory>
-            <outputDirectory>chudian-block-eos</outputDirectory>
+            <outputDirectory>eos-wool-getting</outputDirectory>
             <includes>
                 <include>${project.build.finalName}.jar</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>${project.basedir}</directory>
-            <outputDirectory>chudian-block-eos</outputDirectory>
+            <outputDirectory>eos-wool-getting</outputDirectory>
             <includes>
                 <include>*.sh</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>${project.build.directory}/lib</directory>
-            <outputDirectory>chudian-block-eos/lib</outputDirectory>
+            <outputDirectory>eos-wool-getting/lib</outputDirectory>
             <includes>
                 <include>*.*</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>${project.build.directory}/classes</directory>
-            <outputDirectory>chudian-block-eos/conf</outputDirectory>
+            <outputDirectory>eos-wool-getting/conf</outputDirectory>
             <includes>
                 <include>*.xml</include>
                 <include>*.properties</include>

@@ -108,7 +108,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>chudian-block-eos</finalName>
+		<finalName>eos-wool-getting</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources/config/${env}</directory>
@@ -185,7 +185,7 @@
 							<goal>single</goal>
 						</goals>
 						<configuration>
-							<finalName>chudian-block-eos</finalName>
+							<finalName>eos-wool-getting</finalName>
 							<appendAssemblyId>false</appendAssemblyId>
 							<descriptors>
 								<descriptor>${project.basedir}/assembly.xml</descriptor>
