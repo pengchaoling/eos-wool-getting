@@ -66,7 +66,7 @@ public class EosWoolGettingApplicationTest {
         //每次下注金额
         String quantity = "0.1000 EOS";
         //下注memo
-        String memo = "96";
+        String memo = "49-pengchaoling-7L7TiEQnvnalt0XZ";
 
         Eos4j eos4j = new Eos4j("https://api.jeda.one");
         List<EosAccount> eosAccounts = eosService.getAccountByExcel();
@@ -185,6 +185,25 @@ public class EosWoolGettingApplicationTest {
             System.out.println(transactionResults.toString());
         }
         System.out.println("执行完毕");
+    }
+
+    /**
+     * 用主账户创建新账户
+     */
+    @Test
+    public void CreateAccount(){
+        Eos4j eos4j = new Eos4j("https://node.betdice.one");
+
+        try {
+            eos4j.createAccount(mainAccountPk,mainAccountname,
+                    "smartcapit11","EOS6AHzhi6QSJQKhrrLcssyekCkDfaeTQ4SvfxRviRf3xKBYQVCct","EOS6AHzhi6QSJQKhrrLcssyekCkDfaeTQ4SvfxRviRf3xKBYQVCct",
+
+                    4096l,"0.1 EOS","0.05 EOS",1l);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 
