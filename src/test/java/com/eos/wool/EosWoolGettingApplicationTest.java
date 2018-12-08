@@ -69,9 +69,9 @@ public class EosWoolGettingApplicationTest {
         //转给下注的合约账户
         String toAccount = "thebetxowner";
         //每次下注金额
-        String quantity = "0.1000 EOS";
+        String quantity = "0.5000 EOS";
         //下注memo
-        String memo = "49-pengchaoling-7L7TiEQnvnalt0XZ";
+        String memo = "96-pengchaoling-7L7TiEQnvnalt0XZ";
 
         Eos4j eos4j = new Eos4j("https://api.jeda.one");
         List<EosAccount> eosAccounts = eosService.getAccountByExcel();
@@ -101,7 +101,7 @@ public class EosWoolGettingApplicationTest {
     @Test
     public void transferEosToAllSon(){
         //转账数量
-        String quantity = "0.1000 EOS";
+        String quantity = "1.0000 EOS";
         //转账memo
         String memo = "";
 
@@ -116,11 +116,12 @@ public class EosWoolGettingApplicationTest {
                         "eosio.token",mainAccountname,
                         eosAccount.getFromAccount(),
                         quantity, memo);
-                System.out.println(transactionResults.toString());
             } catch (Exception e) {
                 System.out.println("执行失败,账号:"+eosAccount.getFromAccount());
                 e.printStackTrace();
             }
+            System.out.println(transactionResults.toString());
+
 
         }
         System.out.println("执行完毕");
@@ -149,6 +150,11 @@ public class EosWoolGettingApplicationTest {
             try {
 
                 BigDecimal bigDecimal = eos4j.getCurrencyBalance(eosAccount.getFromAccount(),code,symbol);
+                String amount = bigDecimal.toString();
+                if(amount.equals("")){
+                    System.out.println("账号余额已经清零"+eosAccount.getFromAccount());
+                    continue;
+                }
 
                 String quantity = bigDecimal.toString() +" " + symbol;
                 transactionResults = eos4j.transfer(eosAccount.getPk(),
@@ -195,7 +201,7 @@ public class EosWoolGettingApplicationTest {
     /**
      * 用主账户批量创建新账户,每次十个,记得修改下面的参数
      */
-    @Test
+    //@Test
     public void CreateAccount(){
 
         String lastAccunt = "";
