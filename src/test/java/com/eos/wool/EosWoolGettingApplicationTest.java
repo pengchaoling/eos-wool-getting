@@ -201,7 +201,7 @@ public class EosWoolGettingApplicationTest {
     /**
      * 用主账户批量创建新账户,每次十个,记得修改下面的参数
      */
-    //@Test
+    @Test
     public void CreateAccount(){
 
         String lastAccunt = "";
