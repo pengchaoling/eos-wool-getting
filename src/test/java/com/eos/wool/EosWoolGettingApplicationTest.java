@@ -27,7 +27,7 @@ public class EosWoolGettingApplicationTest {
 				"guessfoxgame",
 				"1.0000 EOS", "1;97;pengchaoling;");
 		System.out.println(transactionResults.toString());
-		System.out.println(11);
+		System.out.println("test");
 	}
 
 
