@@ -12,7 +12,14 @@ public class EosAccount {
     /**
      * 个人账户
      */
-    private String fromAccount;
+    private String accountname;
+
+    public EosAccount(String pk,String accountname){
+        this.pk = pk;
+        this.accountname = accountname;
+    }
+
+    public EosAccount(){}
 
 
 
@@ -24,29 +31,19 @@ public class EosAccount {
         this.pk = pk;
     }
 
-    public String getFromAccount() {
-        return fromAccount;
+    public String getAccountname() {
+        return accountname;
     }
 
-    public void setFromAccount(String fromAccount) {
-        this.fromAccount = fromAccount;
-    }
-
-
-
-    public EosAccount(String pk, String fromAccount, String toAccount) {
-        this.pk = pk;
-        this.fromAccount = fromAccount;
-    }
-
-    public EosAccount() {
+    public void setAccountname(String accountname) {
+        this.accountname = accountname;
     }
 
     @Override
     public String toString() {
         return "EosAccount{" +
                 "pk='" + pk + '\'' +
-                ", fromAccount='" + fromAccount + '\'' +
+                ", accountname='" + accountname + '\'' +
                 '}';
     }
 }

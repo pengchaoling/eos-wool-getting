@@ -35,22 +35,6 @@ public class EosWoolGettingApplicationTest {
     private String mainAccountPk;
 
 
-	@Test
-	public void contextLoads() {
-	}
-
-
-	@Test
-	public void testTransfer() throws IOException {
-		Eos4j eos4j = new Eos4j("https://api.jeda.one");
-
-		PushTransactionResults transactionResults = eos4j.transfer("你的私钥",
-				"eosio.token","你的账户名",
-				"pengchaoling",
-				"1.0000 EOS", "1;97;pengchaoling;");
-		System.out.println(transactionResults.toString());
-		System.out.println("test");
-	}
 
     /**
      * 创建excel模板
@@ -58,6 +42,22 @@ public class EosWoolGettingApplicationTest {
     @Test
     public void TestCreateExcel(){
        eosService.createExcel();
+    }
+
+    /**
+     * 从excel中将数据插入账户表
+     */
+    @Test
+    public void fromExcelToMysql(){
+        eosService.fromExcelToMysql();
+    }
+
+    /**
+     * 从账户表转移到temp临时表
+     */
+    @Test
+    public void addToTemp(){
+        eosService.addToTemp();
     }
 
 
@@ -74,19 +74,24 @@ public class EosWoolGettingApplicationTest {
         String memo = "96-pengchaoling-7L7TiEQnvnalt0XZ";
 
         Eos4j eos4j = new Eos4j("https://api.jeda.one");
-        List<EosAccount> eosAccounts = eosService.getAccountByExcel();
+        List<EosAccount> eosAccounts = eosService.getTempAccountList();
         for (EosAccount  eosAccount : eosAccounts){
             System.out.println(eosAccount.toString());
 
             PushTransactionResults transactionResults = null;
             try {
                 transactionResults = eos4j.transfer(eosAccount.getPk(),
-                        "eosio.token",eosAccount.getFromAccount(),
+                        "eosio.token",eosAccount.getAccountname(),
                         toAccount,
                         quantity, memo);
-                System.out.println(transactionResults.toString());
+                if(transactionResults!=null&&transactionResults.getTransactionId()!=""){
+                    //执行成功,将账户从temp表中删除
+                    eosService.deleteFromTemp(eosAccount.getAccountname());
+                }
+                System.out.println(transactionResults.getTransactionId());
+
             } catch (Exception e) {
-                System.out.println("执行失败,账号:"+eosAccount.getFromAccount());
+                System.out.println("执行失败,账号:"+eosAccount.getAccountname());
                 e.printStackTrace();
             }
 
@@ -106,7 +111,7 @@ public class EosWoolGettingApplicationTest {
         String memo = "";
 
         Eos4j eos4j = new Eos4j("https://api.jeda.one");
-        List<EosAccount> eosAccounts = eosService.getAccountByExcel();
+        List<EosAccount> eosAccounts = eosService.getTempAccountList();
         for (EosAccount  eosAccount : eosAccounts){
             System.out.println(eosAccount.toString());
 
@@ -114,13 +119,17 @@ public class EosWoolGettingApplicationTest {
             try {
                 transactionResults = eos4j.transfer(mainAccountPk,
                         "eosio.token",mainAccountname,
-                        eosAccount.getFromAccount(),
+                        eosAccount.getAccountname(),
                         quantity, memo);
+                if(transactionResults!=null&&transactionResults.getTransactionId()!=""){
+                    //执行成功,将账户从temp表中删除
+                    eosService.deleteFromTemp(eosAccount.getAccountname());
+                    System.out.println(transactionResults.getTransactionId());
+                }
             } catch (Exception e) {
-                System.out.println("执行失败,账号:"+eosAccount.getFromAccount());
+                System.out.println("执行失败,账号:"+eosAccount.getAccountname());
                 e.printStackTrace();
             }
-            System.out.println(transactionResults.toString());
 
 
         }
@@ -135,34 +144,39 @@ public class EosWoolGettingApplicationTest {
      */
     @Test
     public void clearAllEosToMainAccount(){
-        //合约名称
+        //合约名称,如果是eos 则是eosio.token,其他的代币是代币的发币合约
         String code = "eosio.token";
         //代币名称
         String symbol = "EOS";
 
         Eos4j eos4j = new Eos4j("https://api.jeda.one");
 
-        List<EosAccount> eosAccounts = eosService.getAccountByExcel();
+        List<EosAccount> eosAccounts = eosService.getTempAccountList();
         for (EosAccount  eosAccount : eosAccounts){
             System.out.println(eosAccount.toString());
 
             PushTransactionResults transactionResults = null;
             try {
 
-                BigDecimal bigDecimal = eos4j.getCurrencyBalance(eosAccount.getFromAccount(),code,symbol);
+                BigDecimal bigDecimal = eos4j.getCurrencyBalance(eosAccount.getAccountname(),code,symbol);
                 String amount = bigDecimal.toString();
                 if(amount.equals("0.0000")){
-                    System.out.println("账号余额已经清零"+eosAccount.getFromAccount());
+                    System.out.println("账号余额已经清零"+eosAccount.getAccountname());
                     continue;
                 }
 
                 String quantity = bigDecimal.toString() +" " + symbol;
                 transactionResults = eos4j.transfer(eosAccount.getPk(),
-                        "eosio.token",eosAccount.getFromAccount(),mainAccountname,
+                        code,eosAccount.getAccountname(),mainAccountname,
                         quantity, "");
                 System.out.println(transactionResults.toString());
+                if(transactionResults!=null&&transactionResults.getTransactionId()!=""){
+                    //执行成功,将账户从temp表中删除
+                    eosService.deleteFromTemp(eosAccount.getAccountname());
+                }
             } catch (Exception e) {
-                System.out.println("执行失败,账号:"+eosAccount.getFromAccount()+e.getMessage());
+                e.printStackTrace();
+                System.out.println("执行失败,账号:"+eosAccount.getAccountname()+e.getMessage());
 
             }
 
@@ -179,7 +193,7 @@ public class EosWoolGettingApplicationTest {
     public void buyCpuForSon(){
 
         Eos4j eos4j = new Eos4j("https://api.jeda.one");
-        List<EosAccount> eosAccounts = eosService.getAccountByExcel();
+        List<EosAccount> eosAccounts = eosService.getTempAccountList();
         for (EosAccount  eosAccount : eosAccounts){
             System.out.println(eosAccount.toString());
 
@@ -188,12 +202,17 @@ public class EosWoolGettingApplicationTest {
                 transactionResults = eos4j.transfer(mainAccountPk,
                         "eosio.token",mainAccountname,
                         "cpubankeosio",
-                        "0.0100 EOS","7d "+eosAccount.getFromAccount()+" cpu");
+                        "0.0100 EOS","7d "+eosAccount.getAccountname()+" cpu");
+                if(transactionResults!=null&&transactionResults.getTransactionId()!=""){
+                    //执行成功,将账户从temp表中删除
+                    eosService.deleteFromTemp(eosAccount.getAccountname());
+                }
+                System.out.println(transactionResults.getTransactionId());
             } catch (Exception e) {
-                System.out.println("执行失败,账号:"+eosAccount.getFromAccount());
+                System.out.println("执行失败,账号:"+eosAccount.getAccountname());
                 e.printStackTrace();
             }
-            System.out.println(transactionResults.toString());
+
         }
         System.out.println("执行完毕");
     }
@@ -243,6 +262,11 @@ public class EosWoolGettingApplicationTest {
             }
         }
 
+    }
+
+    @Test
+    public void temp(){
+       eosService.addToTemp();
     }
 
 

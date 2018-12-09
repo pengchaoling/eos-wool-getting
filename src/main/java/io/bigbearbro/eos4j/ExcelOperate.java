@@ -35,7 +35,7 @@ public class ExcelOperate {
     public List<EosAccount> getStudent() {
         List<EosAccount> list = new ArrayList<EosAccount>();
         EosAccount student1 = new EosAccount("test",
-                "test", "xxxxx");
+                "test");
         list.add(student1);
         return list;
     }
@@ -78,7 +78,7 @@ public class ExcelOperate {
             cell.setCellStyle(cellStyle);
 
             cell = hssfRow.createCell(1);
-            cell.setCellValue(eosAccount.getFromAccount());
+            cell.setCellValue(eosAccount.getAccountname());
             cell.setCellStyle(cellStyle);
         }
 
@@ -137,7 +137,7 @@ public class ExcelOperate {
                 if (cell == null) {
                     continue;
                 }
-                eosAccount.setFromAccount(cell.getStringCellValue());
+                eosAccount.setAccountname(cell.getStringCellValue());
 
 
                 list.add(eosAccount);

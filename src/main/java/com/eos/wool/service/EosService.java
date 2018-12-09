@@ -26,6 +26,34 @@ public interface EosService {
      */
     List<EosAccount> getAccountByExcel();
 
+    /**
+     * 从excel中将数据存进mysql
+     */
+    void fromExcelToMysql();
+
+    /**
+     * 从mysql中读取数据
+     * @return
+     */
+    List<EosAccount> getAccountByMysql();
+
+    /**
+     * 获取临时表中的数据
+     * @return
+     */
+    List<EosAccount> getTempAccountList();
+    /**
+     * 转移到临时账户
+     */
+    int addToTemp();
+
+    /**
+     * 从temp表中删除指定账户
+     * @param accountname
+     * @return
+     */
+    boolean deleteFromTemp(String accountname);
+
 
 
 }
